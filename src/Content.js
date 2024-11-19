@@ -1,13 +1,11 @@
 import styled from "styled-components";
+import Header from "./components/headers/Header";
 
-const Example = styled.p`
-  font-size: var(--fs-heading-1);
-`;
 
 function Content() {
     return (
         <>
-          <Example>Example Text</Example>
+          <Header />
         </>
     );
   }
