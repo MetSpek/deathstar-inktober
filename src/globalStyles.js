@@ -4,17 +4,22 @@ import {createGlobalStyle} from "styled-components";
 const GlobalStyle = createGlobalStyle`
     * {
         box-sizing: border-box;
+        margin: 0;
+        padding: 0;
     }
 
     :root {
         // Primitives
         --color-white: #fff;
         --color-black: #000;
+        --color-light-gray: #D9D9D9;
 
         --color-primary: #fff;
         --color-secondary: #000;
 
         --color-background: #222222;
+        --color-background-gray-transparent: rgba(217, 217, 217, 0.2);
+        --color-background-black-transparent: rgba(0, 0, 0, 0.9);
 
         // Font properties
         --font: 'Raleway', sans-serif;
@@ -29,8 +34,8 @@ const GlobalStyle = createGlobalStyle`
         --fw-black: 900;
 
         // Font sizes
-        --fs-heading-1: 3.6rem;
-        --fs-heading-2: 2.4rem;
+        --fs-heading-1: 4.8rem;
+        --fs-heading-2: 3.6rem;
         --fs-heading-3: 2rem;
         --fs-text: 1.8rem;
         --fs-label: 2rem;
@@ -56,6 +61,19 @@ const GlobalStyle = createGlobalStyle`
         color: var(--color-primary);
         background-color: var(--color-background);
     }
+
+    h1 {
+        font-size: var(--fs-heading-1);
+    }
+
+    h2 {
+        font-size: var(--fs-heading-2);
+    }
+
+    h3 {    
+        font-size: var(--fs-heading-3);
+    }
+
 `;
 
 export default GlobalStyle;

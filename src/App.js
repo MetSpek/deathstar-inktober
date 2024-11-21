@@ -1,11 +1,15 @@
 import GlobalStyle from './globalStyles';
 import Content from './Content'
+import PageProvider from "./PageProvider";
+
 
 function App() {
   return (
       <>
-        <GlobalStyle />
-        <Content />
+        <PageProvider>
+          <GlobalStyle />
+          <Content />
+        </PageProvider>
       </>
   );
 }
