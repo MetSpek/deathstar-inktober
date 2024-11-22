@@ -16,33 +16,44 @@ const Year = styled.div`
   width: 100%;
 `;
 
+const Nothing = styled.h2`  
+  padding-top: 5rem;
+`;
+
 function Content() {
   const { year } = useContext(PageContext);
   
-  const folders = require.context(`../public/assets/2024`, true, /^\.\//);
-  const folderImages = folders.keys().reduce((acc, path) => {
-    const parts = path.split('/');
-    if (parts.length > 2) {
-      const folderName = parts[1];
-      const fileName = parts[2];
-      if (!acc[folderName]) {
-        acc[folderName] = {
-          title: folderName,
-          images: []
+  let folders;
+  let data
+  if (year === "2024") {
+    folders = require.context(`../public/assets/2024`, true, /^\.\//);
+  } 
+  if (folders !== undefined) {
+    const folderImages = folders.keys().reduce((acc, path) => {
+      const parts = path.split('/');
+      if (parts.length > 2) {
+        const folderName = parts[1];
+        const fileName = parts[2];
+        if (!acc[folderName]) {
+          acc[folderName] = {
+            title: folderName,
+            images: []
+          };
+        }
+   
+        const imagePath = `./${parts[1]}/${fileName}`;
+        const image = {
+          title: fileName,
+          source: folders(imagePath)
         };
+        acc[folderName].images.push(image);
       }
- 
-      const imagePath = `./${parts[1]}/${fileName}`;
-      const image = {
-        title: fileName,
-        source: folders(imagePath)
-      };
-      acc[folderName].images.push(image);
-    }
-    return acc;
-  }, {});
-
-  const data = Object.values(folderImages);
+      return acc;
+    }, {});
+  
+    data = Object.values(folderImages);
+  }
+  
 
   return (
       <>
@@ -50,11 +61,10 @@ function Content() {
         <Body>
           <Overlay />
           <Year>
-            {data.map(folder => 
-              <Day key={folder.title} title={folder.title} images={folder.images}/>)
-            }
-            
-            {/* <Day title={"test"} images={images}/> */}
+            {data && data.map((folder, index) => 
+              <Day key={folder.title} index={index + 1} title={folder.title} images={folder.images}/>
+            )}
+            { !data && <Nothing>Nothing found...</Nothing> }
           </Year>
         </Body>
       </>

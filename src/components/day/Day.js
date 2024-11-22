@@ -1,10 +1,27 @@
-import styled from "styled-components";
+import { styled, keyframes } from "styled-components";
 import Carousel from 'react-multi-carousel';
 import Art from "../art/Art";
+import React, { useEffect, useRef } from 'react';
+
+const fadeIn = keyframes`
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+`;
 
 const StyledDay = styled.div`
   width: 100%;
+  opacity: 0;
+  animation-fill-mode: forwards;
   margin-bottom: 5rem;
+  animation: ${fadeIn} 1s ease-in-out;
+  ${props => props.$delay && `
+    animation-delay: ${props.$delay * 100}ms;
+    animation-fill-mode: forwards;
+`}
 `;
 
 const StyledCarousel = styled(Carousel)`
@@ -87,7 +104,31 @@ const responsive = {
   }
 };
 
-export const Day = ({ title, images, ...props }) => {
+export const Day = ({ title, images, index, ...props }) => {
+  const tagRefs = useRef([]);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      const pageTop = window.pageYOffset;
+      const pageBottom = pageTop + window.innerHeight;
+
+      tagRefs.current.forEach(tagRef => {
+        const tag = tagRef.current;
+        if (tag.offsetTop < pageBottom) {
+          tag.classList.add('visible');
+        } else {
+          tag.classList.remove('visible');
+        }
+      });
+    };
+
+    window.addEventListener('scroll', handleScroll);
+
+    return () => {
+      window.removeEventListener('scroll', handleScroll);
+    };
+  }, []);
+
   const CustomButtonGroup = ({ next, previous }) => (
     <ButtonGroup>
       <Button onClick={previous}>&#129032;</Button>
@@ -95,10 +136,8 @@ export const Day = ({ title, images, ...props }) => {
     </ButtonGroup>
   );
 
-  console.log(images)
-
   return (
-    <StyledDay>
+    <StyledDay $delay={index}>
       <DayTitle>{title}</DayTitle>
       <StyledCarousel
         centerMode={true}
@@ -111,7 +150,12 @@ export const Day = ({ title, images, ...props }) => {
         customButtonGroup={<CustomButtonGroup />}
       >
         {images.map((image, index) => (
-          <Art key={index} title={image.title} src={image.source} {...props} />
+          <Art
+            key={index}
+            title={image.title}
+            src={image.source}
+            {...props}
+          />
         ))}
       </StyledCarousel>
     </StyledDay>
